@@ -64,8 +64,8 @@ public Boolean validamount (int amount){
 	else 
 		return false;
 }
-public void addhistory (int amount){
-	this.histroy.add(""+amount);
+public void addhistory (String r,int amount){
+	this.histroy.add(r+amount);
 }
 public  boolean containsOnlyNumbers(String str) {
     for (int i = 0; i < str.length(); i++) {

@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 public class GUI extends Application  {
 	accounts account;
+	int c=0;
 //main 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -28,7 +29,7 @@ public class GUI extends Application  {
 		
 		
 		 account.constructor("a", "1", 0,0);
-
+		 
      // creating object in the window
 	 primaryStage.setTitle("login");
      Label usernamelabel = new Label() ;
@@ -109,16 +110,20 @@ loginbutton.setOnAction(new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent event ){
 					String str=String.valueOf(amountfield.getText());
 					Boolean valid=account.containsOnlyNumbers(str);
+
 					if(valid){
-					 int amount = Integer.parseInt(amountfield.getText());
-					
+						 int amount = Integer.parseInt(amountfield.getText());
 					account.deposit(amount);
 					successdalert.setTitle("message");
 					successdalert.setHeaderText("thank you mr:"+account.username);
 					successdalert.setContentText("you have done successfull deposition !");
 					successdalert.showAndWait();
-					account.addhistory(amount);
+					account.addhistory("deposit" ,+amount);
+					
 					account.transactioncounter++;
+					c=0;
+					previousbutton.setDisable(false);
+
 					}
 					else{
 					
@@ -132,21 +137,31 @@ loginbutton.setOnAction(new EventHandler<ActionEvent>(){
 			//accountgrid.add(child, columnIndex, rowIndex);
 
 			accountgrid.add(previousbutton, 0,5 );
+
 			previousbutton.setOnAction(new EventHandler<ActionEvent>(){
 			public void handle(ActionEvent event ){
-				int c=0;
+				
+				//int cp=account.transactioncounter;
+
+		        if((account.transactioncounter!=0)&&(c<=4)&&(account.transactioncounter-c!=0)){	
 				previousalert1.setTitle("message");
 				previousalert1.setHeaderText("thank you mr:"+account.username);
-				previousalert1.setContentText(""+account.histroy.get(account.transactioncounter-1));
+				previousalert1.setContentText(""+account.histroy.get(account.transactioncounter-c-1));
 				previousalert1.showAndWait();
 							c++;
-				account.transactioncounter--;
-				if((c>5)||(c>account.transactioncounter)||(account.transactioncounter==0))
-				{ 
+							
+							nextbutton.setDisable(false);
+						// account.transactioncounter--;
+							
+				}
+				//else if((c>4)||(c==account.transactioncounter)||(account.transactioncounter==0)||(c==0))
+		        else /*if(account.transactioncounter-1-c==0)*/
+		        { 
 				previousalert2.setTitle("message");
 				previousalert2.setHeaderText("thank you mr:"+account.username);
 				previousalert2.setContentText("there is no more history");
 				previousalert2.showAndWait();
+				previousbutton.setDisable(true);
 				}
 
 				
@@ -155,27 +170,33 @@ loginbutton.setOnAction(new EventHandler<ActionEvent>(){
 			accountgrid.add(nextbutton, 0, 4);
 			nextbutton.setOnAction(new EventHandler<ActionEvent>(){
 				public void handle(ActionEvent event ){
-					int cn=0;
-				
 					
-					if((cn>5)||(account.transactioncounter==0)||(account.transactioncounter==1))
-					{ 
-					nextalert2.setTitle("message");
-					nextalert2.setHeaderText("thank you mr:"+account.username);
-					nextalert2.setContentText("there is no more history");
-					nextalert2.showAndWait();
-					}
-					else {
+					//if((account.transactioncounter!=0)&&(c>4)&&(account.transactioncounter-1==account.histroy.size())){	
+					if((account.transactioncounter!= 0) && (c!=0)&&(account.transactioncounter-c!=0)){
+						c--;
 						nextalert1.setTitle("message");
 						nextalert1.setHeaderText("thank you mr:"+account.username);
-							nextalert1.setContentText(""+account.histroy.get(account.transactioncounter));
-							nextalert1.showAndWait();
-										cn++;
-							account.transactioncounter++;
-					}
+						nextalert1.setContentText(""+account.histroy.get(account.transactioncounter-Math.abs(c)-1));
+						nextalert1.showAndWait();
+						previousbutton.setDisable(false);
+									//c--;
+								// account.transactioncounter--;
+									
+						}
+						//else if((c>4)||(c==account.transactioncounter)||(account.transactioncounter==0)||(c==0))
+				        else /*if(account.transactioncounter-10-c==0)*/
+				        { 
+						nextalert2.setTitle("message");
+						nextalert2.setHeaderText("thank you mr:"+account.username);
+						nextalert2.setContentText("there is no more history");
+						nextalert2.showAndWait();
+						nextbutton.setDisable(true);
+						
+						}
 
-				}}
-			);
+						
+					}}
+				);
 			//accountgrid.add(child, columnIndex, rowIndex);
 
 			accountgrid.add(withdrawbutton, 0, 3);
@@ -195,8 +216,11 @@ loginbutton.setOnAction(new EventHandler<ActionEvent>(){
 					successwalert.setHeaderText("thank you mr:"+account.username);
 					successwalert.setContentText("you have done successfull withdraw process !");
 					successwalert.showAndWait();	
-					account.addhistory(amount);
-					account.transactioncounter++;}
+					account.addhistory("withdraw",amount);
+					account.transactioncounter++;
+					previousbutton.setDisable(false);
+					c=0;
+}
 					else{
 						failwalert.setTitle("message");
 						failwalert.setHeaderText("!!!!!!!!!!!ALERT!!!!!!!!!!");
@@ -224,9 +248,11 @@ loginbutton.setOnAction(new EventHandler<ActionEvent>(){
 					inqueryalert.setTitle("message");
 					inqueryalert.setHeaderText("thank you mr: " +account.username);
 					inqueryalert.setContentText("your balance is  "+account.balance);
-					inqueryalert.showAndWait();	
-					account.addhistory(+account.balance );
+					inqueryalert.showAndWait();
+					account.addhistory("inquery",+account.balance );
 					account.transactioncounter++;
+					previousbutton.setDisable(false);
+c=0;
 
 
 					
